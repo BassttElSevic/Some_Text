@@ -14,7 +14,7 @@
 
 ## 1. `impl` 块——必须先有类型吗？
 
-你的直觉是对的：**`impl` 块必须对应一个已经定义好的类型**。如果你写：
+**`impl` 块必须对应一个已经定义好的类型**。如果你写：
 
 ```rust
 struct Rectangle {
@@ -27,7 +27,7 @@ impl Rectangle {   // ✅ Rectangle 已经定义了
 }
 ```
 
-但如果你写：
+但如果写：
 
 ```rust
 impl Imaginary {   // ❌ 编译报错：找不到 Imaginary
@@ -59,9 +59,9 @@ impl Rectangle {
 
 ---
 
-## 2. `self` 到底指向栈还是堆？
+## 2. `self` 指向栈？
 
-这是你最核心的疑问。答案是：**`&self` 指向实例本身所在的位置，实例在哪它就在哪。**
+**`&self` 指向实例本身所在的位置，实例在哪它就在哪。**
 
 ### 2.1 `Rectangle` 的内存布局——纯栈居民
 
@@ -85,7 +85,7 @@ flowchart LR
     self --> rect1
 ```
 
-当你调用 `rect1.area()`：
+当调用 `rect1.area()`：
 
 1. `rect1` 这个变量存在 `main` 的栈帧里。
 2. `&self` 就是一个指针，**指向栈上 `rect1` 的那块内存**。
@@ -123,7 +123,7 @@ flowchart LR
 
 ### 2.3 深挖：`String` 字段是 inline 的，不是指针
 
-这是最容易搞混的地方。你问：**`Person` 里有个 `String`，那 `&self` 是指向栈上的 `Person`，还是指向堆上的字符串数据？**
+问：当**`Person` 里有个 `String`，那 `&self` 是指向栈上的 `Person`，还是指向堆上的字符串数据？**
 
 **答案是：指向栈上的 `Person`。** 而且 `String` 的三个字段（`ptr`、`len`、`cap`）是直接**嵌在 `Person` 的内存里**的，不是 `Person` 存一个"指向 String 结构体的指针"。
 
